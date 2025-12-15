@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2022",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "paths": {
+      "@common/*": ["src/common/*"],
+      "@auth/*": ["src/auth/*"],
+      "@prisma/*": ["src/prisma/*"],
+      "@websocket/*": ["src/websocket/*"],
+      "@proctoring/*": ["src/proctoring/*"],
+      "@recordings/*": ["src/recordings/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+

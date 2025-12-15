@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role
+  quizzes   Quiz[]   @relation("AdminQuizzes")
+  attempts  Attempt[]
+  createdAt DateTime @default(now())
+}
+
+model Quiz {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  duration    Int
+  startsAt    DateTime
+  endsAt      DateTime
+  createdBy   User      @relation("AdminQuizzes", fields: [createdById], references: [id])
+  createdById String
+  questions   Question[]
+  attempts    Attempt[]
+}
+
+model Question {
+  id       String  @id @default(uuid())
+  quizId   String
+  quiz     Quiz    @relation(fields: [quizId], references: [id])
+  type     String
+  content  String
+  options  Json?
+  answer   Json
+}
+
+model Attempt {
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  quizId      String
+  quiz        Quiz        @relation(fields: [quizId], references: [id])
+  startedAt   DateTime    @default(now())
+  submittedAt DateTime?
+  violations  Violation[]
+  recordings  Recording[]
+}
+
+model Violation {
+  id        String   @id @default(uuid())
+  attemptId String
+  attempt   Attempt  @relation(fields: [attemptId], references: [id])
+  type      String
+  timestamp DateTime @default(now())
+}
+
+model Recording {
+  id        String   @id @default(uuid())
+  attemptId String
+  attempt   Attempt  @relation(fields: [attemptId], references: [id])
+  type      String
+  s3Url     String
+}
+
